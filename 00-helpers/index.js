@@ -28,6 +28,21 @@ function getSpecificFiles(arr, type) {
     return files;
 }
 
+function getFolders(arr, outputFolder) {
+    const [input, output] = outputFolder;
+    const files = arr.map((file) => {
+        const result = file.split('/');
+        const indexOf = result.findIndex(item => item === input);
+        result[indexOf] = output;
+        
+        result.pop();
+
+        return result.join('/')
+    })
+    
+    return files
+}
+
 async function desinfectFolder(path) {
     try {
         await rm(path, { recursive: true })
@@ -48,6 +63,7 @@ async function readFileThenReturnIt(file) {
     return tempFile
 }
 
+exports.getFolders = getFolders;
 exports.getAllFiles = getAllFiles;
 exports.desinfectFolder = desinfectFolder;
 exports.getSpecificFiles = getSpecificFiles;
