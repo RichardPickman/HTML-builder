@@ -1,4 +1,4 @@
-const { getAllFiles, getSpecificFiles, desinfectFolder } = require('../00-helper');
+const { getAllFiles, getSpecificFiles } = require('../00-helper');
 const { mkdir, writeFile, stat } = require('fs/promises');
 const { createReadStream } = require('fs');
 const { resolve, join } = require('path');
@@ -12,11 +12,11 @@ async function bundleStyles(path, outputDir, outputFile) {
     await mkdir(outputDir, { recursive: true });
     
     for (let file of styleFiles) {
-        const { size } = stat(file)
+        const { size } = stat(file);
         const readStream = createReadStream(file, { highWaterMark: size, encoding: 'utf8' });
     
         for await (const text of readStream) {
-            filesContent.push(text)
+            filesContent.push(text);
         }
     }
     
