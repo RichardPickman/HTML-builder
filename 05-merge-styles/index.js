@@ -1,10 +1,12 @@
-const { getAllFiles, getSpecificFiles } = require('../00-helper');
+const { getAllFiles, getSpecificFiles, desinfectFolder } = require('../00-helpers');
 const { mkdir, writeFile, stat } = require('fs/promises');
 const { createReadStream } = require('fs');
 const { resolve, join } = require('path');
 
 
 async function bundleStyles(path, outputDir, outputFile) {
+    await desinfectFolder(outputDir);
+    
     const currentFiles = await getAllFiles(path);
     const styleFiles = getSpecificFiles(currentFiles, '.css');
     const filesContent = [];

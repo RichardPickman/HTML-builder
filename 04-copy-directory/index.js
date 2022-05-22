@@ -1,19 +1,19 @@
-const { readdir, mkdir, copyFile } = require('fs/promises');
-const { getAllFiles } = require('../00-helper');
-const { join } = require('path');
+const { mkdir, copyFile } = require('fs/promises');
+const { getAllFiles, getFolders } = require('../00-helpers');
+const { join, resolve } = require('path');
 
-async function reusableCopyDir(checkDir, dirName) {
-    const filesArr = await readdir(checkDir, { withFileTypes: true });
+async function copyDir(initialFolder, outputFolder, buildFolders) {
+    const fileArr = await getAllFiles(initialFolder);
+    const folders = getFolders(fileArr, buildFolders);
 
-    mkdir(dirName, { recursive: true });
+    fileArr.forEach(async (file, index) => {
+        const separateFile = file.split('/').slice(7);
+        await mkdir(folders[index], { recursive: true });
 
-    filesArr.forEach(file => {
-        const initialFolder = join(checkDir, file.name);
-        const outputFolder = join(dirName, file.name);
-        
-        if (file.isDirectory()) reusableCopyDir(initialFolder, outputFolder);
-        else copyFile(initialFolder, outputFolder);
+        copyFile(file, join(outputFolder, ...separateFile));
     })
 }
 
-module.exports = reusableCopyDir;
+copyDir(join(resolve(__dirname), 'files'), join(resolve(__dirname), 'files-copy'), ['files', 'files-copy']);
+
+exports.copyDir = copyDir;

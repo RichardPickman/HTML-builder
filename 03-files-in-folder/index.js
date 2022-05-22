@@ -15,8 +15,6 @@ async function getFolderFiles(folder = currentPath) {
             const pathName = resolve(folderName + '/', file.name);
             
             stat(pathName, (err, stats) => {
-                if (err) console.log(err);
-
                 const fileInfo = file.name.split('.');
                 console.log(`${fileInfo[0] || 'Doesn\'t have name'} - ${fileInfo[1]} - ${stats.size}`);
 

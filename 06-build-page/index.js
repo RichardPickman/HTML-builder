@@ -1,5 +1,5 @@
-const { getAllFiles, getSpecificFiles, readFileThenReturnIt, desinfectFolder } = require('../00-helper');
-const reusableCopyDir = require('../04-copy-directory');
+const { getAllFiles, getSpecificFiles, readFileThenReturnIt, desinfectFolder } = require('../00-helpers');
+const { copyDir } = require('../04-copy-directory');
 const { resolve, join, basename } = require('path');
 const { mkdir, writeFile } = require('fs/promises');
 const bundleStyles = require('../05-merge-styles');
@@ -10,7 +10,7 @@ async function bundler() {
     await desinfectFolder(join(path, 'project-dist'));
     await mkdir(join(path, 'project-dist'), { recursive: true });
     await bundleStyles(join(path), join(path, 'project-dist'), 'style.css');
-    await reusableCopyDir(join(path, 'assets'), path + '/project-dist/assets/');
+    await copyDir(join(path, 'assets'), path + '/project-dist/', ['assets', 'project-dist']);
 
     const allDirFiles = await getAllFiles(join(path));
     const htmlPaths = await getSpecificFiles(allDirFiles, '.html');
