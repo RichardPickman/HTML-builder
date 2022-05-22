@@ -1,13 +1,13 @@
 const { mkdir, copyFile, readdir } = require('fs/promises');
+const { type } = require('os');
 const { join, resolve } = require('path');
 
 function getFolders(arr, outputFolder) {
     const [input, output] = outputFolder;
     const files = arr.map((file) => {
-        const result = file.split('/');
+        const result = type() === 'Windows' ? file.split('\\') : file.split('/');
         const indexOf = result.findIndex(item => item === input);
         result[indexOf] = output;
-        
         result.pop();
 
         return result.join('/')

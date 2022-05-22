@@ -1,6 +1,7 @@
 const { resolve, join, basename, extname } = require('path');
 const { mkdir, writeFile, readdir, stat, copyFile, rm } = require('fs/promises');
 const { createReadStream } = require('fs');
+const { type } = require('os');
 
 async function readFileThenReturnIt(file) {
     const { size } = stat(file);
@@ -17,7 +18,7 @@ async function readFileThenReturnIt(file) {
 function getFolders(arr, outputFolder) {
     const [input, output] = outputFolder;
     const files = arr.map((file) => {
-        const result = file.split('/');
+        const result = type() === 'Windows' ? file.split('\\') : file.split('/');
         const indexOf = result.findIndex(item => item === input);
         result[indexOf] = output;
         
