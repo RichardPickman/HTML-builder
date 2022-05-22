@@ -1,30 +1,7 @@
-const { mkdir, writeFile, stat, readdir } = require('fs/promises');
-const { createReadStream } = require('fs');
+const { mkdir, writeFile, stat } = require('fs/promises');
+const { getAllFiles } = require('../04-copy-directory');
 const { resolve, join, extname } = require('path');
-
-async function desinfectFolder(path) {
-    try {
-        await rm(path, { recursive: true })
-    } catch {
-        console.log('Nothing to remove')
-    }
-}
-
-async function getAllFiles(folder) {
-    const dirFiles = await readdir(folder, { withFileTypes: true });
-    const files = [];
-
-    for (let file of dirFiles) {
-        if (file.isDirectory()) {
-            const data = await getAllFiles(join(folder, file.name));
-            files.push(...data)
-        } else {
-            files.push(join(folder, file.name))
-        }
-    }
-
-    return files;
-}
+const { createReadStream } = require('fs');
 
 function getSpecificFiles(arr, type) {
     const files = arr.filter((file) => {
@@ -64,4 +41,5 @@ bundleStyles(
     'bundle.css',
 );
 
-module.exports = bundleStyles;
+exports.bundleStyles = bundleStyles;
+exports.getSpecificFiles = getSpecificFiles;

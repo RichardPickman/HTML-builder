@@ -47,3 +47,5 @@ async function copyDir(initialFolder, outputFolder, buildFolders) {
 copyDir(join(resolve(__dirname), 'files'), join(resolve(__dirname), 'files-copy'), ['files', 'files-copy']);
 
 exports.copyDir = copyDir;
+exports.getFolders = getFolders;
+exports.getAllFiles = getAllFiles;
