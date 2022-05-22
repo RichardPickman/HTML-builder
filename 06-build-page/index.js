@@ -1,7 +1,5 @@
-const { copyDir } = require('../04-copy-directory');
 const { resolve, join, basename, extname } = require('path');
-const { mkdir, writeFile, readdir, stat } = require('fs/promises');
-const bundleStyles = require('../05-merge-styles');
+const { mkdir, writeFile, readdir, stat, copyFile } = require('fs/promises');
 const { createReadStream } = require('fs');
 
 async function readFileThenReturnIt(file) {
@@ -14,6 +12,52 @@ async function readFileThenReturnIt(file) {
     }
 
     return tempFile
+}
+
+function getFolders(arr, outputFolder) {
+    const [input, output] = outputFolder;
+    const files = arr.map((file) => {
+        const result = file.split('/');
+        const indexOf = result.findIndex(item => item === input);
+        result[indexOf] = output;
+        
+        result.pop();
+
+        return result.join('/')
+    })
+    
+    return files
+}
+
+async function bundleStyles(path, outputDir, outputFile) {
+    const currentFiles = await getAllFiles(path);
+    const styleFiles = getSpecificFiles(currentFiles, '.css');
+    const filesContent = [];
+
+    await mkdir(outputDir, { recursive: true });
+    
+    for (let file of styleFiles) {
+        const { size } = stat(file);
+        const readStream = createReadStream(file, { highWaterMark: size, encoding: 'utf8' });
+    
+        for await (const text of readStream) {
+            filesContent.push(text);
+        }
+    }
+    
+    writeFile(join(outputDir, outputFile), filesContent.join('\n'));
+}
+
+async function copyDir(initialFolder, outputFolder, buildFolders) {
+    const fileArr = await getAllFiles(initialFolder);
+    const folders = getFolders(fileArr, buildFolders);
+    
+    fileArr.forEach(async (file, index) => {
+      const filePath = file.replace(initialFolder, '')
+      await mkdir(folders[index], { recursive: true });
+      
+      copyFile(file, join(outputFolder, filePath));
+    })
 }
 
 async function desinfectFolder(path) {
