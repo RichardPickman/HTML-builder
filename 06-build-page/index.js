@@ -1,5 +1,5 @@
 const { resolve, join, basename, extname } = require('path');
-const { mkdir, writeFile, readdir, stat, copyFile } = require('fs/promises');
+const { mkdir, writeFile, readdir, stat, copyFile, rm } = require('fs/promises');
 const { createReadStream } = require('fs');
 
 async function readFileThenReturnIt(file) {
