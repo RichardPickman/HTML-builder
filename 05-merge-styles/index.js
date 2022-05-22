@@ -38,8 +38,6 @@ function getSpecificFiles(arr, type) {
 
 
 async function bundleStyles(path, outputDir, outputFile) {
-    await desinfectFolder(outputDir);
-    
     const currentFiles = await getAllFiles(path);
     const styleFiles = getSpecificFiles(currentFiles, '.css');
     const filesContent = [];

@@ -35,12 +35,12 @@ async function getAllFiles(folder) {
 async function copyDir(initialFolder, outputFolder, buildFolders) {
     const fileArr = await getAllFiles(initialFolder);
     const folders = getFolders(fileArr, buildFolders);
-
+    
     fileArr.forEach(async (file, index) => {
-        const separateFile = file.split('/').slice(7);
-        await mkdir(folders[index], { recursive: true });
-
-        copyFile(file, join(outputFolder, ...separateFile));
+      const filePath = file.replace(initialFolder, '')
+      await mkdir(folders[index], { recursive: true });
+      
+      copyFile(file, join(outputFolder, filePath));
     })
 }
 
